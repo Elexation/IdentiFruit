@@ -1,0 +1,15 @@
+# Web/API
+fastapi>=0.110
+uvicorn[standard]>=0.27
+jinja2>=3.1
+python-multipart>=0.0.9
+
+# ML / data
+numpy>=1.26
+pillow>=10.0
+scikit-learn>=1.4
+tqdm>=4.66
+
+# PyTorch
+torch
+torchvision
