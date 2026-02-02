@@ -22,7 +22,7 @@ IdentiFruit is a simple web app that uses a computer vision model to classify **
 > Note: `node_modules/` is not included in the repo (generated locally by npm).
 
 ```txt
-Fruitify/
+IdentiFruit/
 ├─ package.json                 # npm deps + scripts (Tailwind build)
 ├─ package-lock.json            # exact npm dependency versions (team consistency)
 ├─ tailwind.config.js           # tells Tailwind what files to scan for class names
