@@ -1,6 +1,6 @@
-# Fruitify 🍓🍌🍎
+# IdentiFruit 🍓🍌🍎
 
-Fruitify is a simple web app that uses a computer vision model to classify **which fruit** is in an image and whether it is **fresh or rotten**.
+IdentiFruit is a simple web app that uses a computer vision model to classify **which fruit** is in an image and whether it is **fresh or rotten**.
 
 - No user accounts  
 - Two-page UI: **Home** → **App** (camera or upload)  
