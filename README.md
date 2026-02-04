@@ -1,3 +1,4 @@
+
 # IdentiFruit 🍓🍌🍎
 
 IdentiFruit is a simple web app that uses a computer vision model to classify **which fruit** is in an image and whether it is **fresh or rotten**.
@@ -124,6 +125,33 @@ Your `package.json` should include:
 ```
 
 ---
+
+---
+
+# Quick Commands
+
+## Build Tailwind CSS (after you edit styles)
+```bash
+npm run build:css
+```
+
+## Train the model
+```bash
+python -m src.training.train
+```
+
+Outputs:
+- `models/fruit_model.pt`
+- `models/classes.txt`
+
+## Run the web app (development)
+```bash
+python -m uvicorn src.app.main:app --reload
+```
+
+Open:
+- `http://127.0.0.1:8000/`
+- `http://127.0.0.1:8000/app`
 
 ## How it Works (simple)
 
