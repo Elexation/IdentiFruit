@@ -1,5 +1,6 @@
 
-# IdentiFruit 🍓🍌🍎
+
+# IdentiFruit 🍓🍌🍎🥭🍊
 
 IdentiFruit is a simple web app that uses a computer vision model to classify **which fruit** is in an image and whether it is **fresh or rotten**.
 
@@ -18,52 +19,44 @@ IdentiFruit is a simple web app that uses a computer vision model to classify **
 
 ---
 
-## Project Structure (with descriptions)
+## Project Structure
 
-> Note: `node_modules/` is not included in the repo (generated locally by npm).
+> `node_modules/` is generated locally by npm and is not committed.
 
 ```txt
 IdentiFruit/
-├─ package.json                 # npm deps + scripts (Tailwind build)
-├─ package-lock.json            # exact npm dependency versions (team consistency)
-├─ tailwind.config.js           # tells Tailwind what files to scan for class names
-├─ .gitignore                   # ignores node_modules, etc.
-├─ requirements.txt             # Python dependencies for training + API
-├─ README.md                    # project overview + setup instructions
+├─ package.json                 npm deps + scripts (Tailwind build)
+├─ package-lock.json            locked npm versions (team consistency)
+├─ tailwind.config.js           Tailwind config (content scan)
+├─ .gitignore                   ignores node_modules, data, model artifacts, etc.
+├─ requirements.txt             Python deps (training + API)
+├─ README.md                    project overview + commands
 │
-├─ data/                        # dataset images (usually not committed)
-│  ├─ Apple/                    # apple images
-│  ├─ Banana/                   # banana images
-│  └─ Strawberry/               # strawberry images
+├─ data/                        dataset images (kept local; not committed)
+├─ models/                      trained outputs (generated after training)
+│  ├─ fruit_model.pt            model weights
+│  └─ classes.txt               class order / label map
 │
-├─ models/                      # exported trained model files (ex: fruit_model.pt)
-├─ notebooks/                   # optional experiments / quick checks
-│
-├─ tests/
-│  └─ test_predict.py           # sanity test for inference predict()
-│
-└─ src/
-   ├─ training/                 # scripts used to train/evaluate/export the model
-   │  ├─ dataset.py             # dataset loader (images → tensors + labels)
-   │  ├─ train.py               # training loop (learn model weights)
-   │  ├─ eval.py                # evaluation/metrics (accuracy, confusion matrix)
-   │  └─ export.py              # saves trained model into /models
+└─ src/                         application source code
+   ├─ training/
+   │  ├─ dataset.py             loads images + labels from `data/`
+   │  └─ train.py               trains + saves into `models/`
    │
-   ├─ inference/                # code used during runtime (no training)
-   │  ├─ model.py               # loads saved model + preprocessing transforms
-   │  └─ predict.py             # predict(image) -> {fruit, freshness, confidence}
+   ├─ inference/
+   │  ├─ model.py               loads weights + preprocessing
+   │  └─ predict.py             returns {fruit, freshness, confidence}
    │
-   └─ app/                      # FastAPI server + frontend files
-      ├─ main.py                # FastAPI app creation + startup
-      ├─ routes.py              # routes: /, /app, /predict
-      ├─ tailwind/
-      │  └─ input.css           # Tailwind input file (@tailwind base/components/utilities)
-      ├─ static/
-      │  ├─ app.js              # browser JS (camera/upload + fetch(/predict))
-      │  └─ styles.css          # compiled Tailwind output (committed)
-      └─ templates/
-         ├─ home.html           # landing page
-         └─ app.html            # camera/upload page
+   └─ app/
+      ├─ main.py                FastAPI app instance (uvicorn entrypoint)
+      ├─ routes.py              endpoints: /, /app, /predict
+      ├─ templates/             HTML pages (Jinja)
+      │  ├─ home.html           landing page
+      │  └─ app.html            upload/camera page
+      ├─ static/                browser assets
+      │  ├─ app.js              upload + fetch(/predict)
+      │  └─ styles.css          compiled Tailwind output
+      └─ tailwind/
+         └─ input.css           Tailwind entry CSS (compiled → styles.css)
 ```
 
 ---
