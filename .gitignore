@@ -9,6 +9,7 @@ build/
 
 # Claude
 CLAUDE.md
+.claude/
 
 # OS / editor
 .DS_Store
