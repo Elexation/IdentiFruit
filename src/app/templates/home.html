@@ -1,9 +1,31 @@
 <!doctype html>
-<html>
-  <head>
-    <link rel="stylesheet" href="/static/styles.css">
-  </head>
-  <body class="min-h-screen flex items-center justify-center">
-    <a class="px-6 py-3 rounded bg-black text-white" href="/app">Start</a>
-  </body>
+<html lang="en" class="h-full">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="/static/styles.css">
+  <title>IdentiFruit</title>
+</head>
+
+<body class="min-h-full flex items-center justify-center bg-linear-to-b from-[#0f172a] via-[#111827] to-[#020617] p-6">
+  <div class="w-full max-w-md sm:max-w-lg rounded-[28px] p-10 sm:p-14 text-center bg-[#1e293b]
+             shadow-[0.625rem_0.625rem_0.875rem_0_rgba(0,0,0,0.6),-0.5rem_-0.5rem_1.125rem_0_rgba(255,255,255,0.08)]">
+    <h1 class="text-3xl sm:text-4xl font-semibold tracking-tight text-white">
+      IdentiFruit
+    </h1>
+
+    <p class="mt-4 text-slate-400 text-base sm:text-lg">
+      Upload a fruit image and get a prediction.
+    </p>
+
+    <a href="/app" class="mt-10 inline-block rounded-2xl px-10 py-4 font-semibold text-slate-400 bg-[#1e293b]
+               shadow-[0.625rem_0.625rem_0.875rem_0_rgba(0,0,0,0.6),-0.5rem_-0.5rem_1.125rem_0_rgba(255,255,255,0.08)]
+               active:shadow-[inset_0.625rem_0.625rem_0.875rem_0_rgba(0,0,0,0.6),inset_-0.5rem_-0.5rem_1.125rem_0_rgba(255,255,255,0.08)]
+               transition-all duration-200 active:scale-[0.98]">
+      Start
+    </a>
+  </div>
+</body>
+
 </html>
