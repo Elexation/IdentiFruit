@@ -31,29 +31,65 @@
           Take Picture
         </button>
 
+        <input id="cameraInput" type="file" accept="image/*" capture="environment" class="hidden" />
+
       </div>
 
       <div
-        class="rounded-[28px] p-4 bg-[#0f172a] shadow-[inset_0.7rem_0.7rem_1rem_0_rgba(0,0,0,0.6),inset_-0.55rem_-0.55rem_1rem_0_rgba(255,255,255,0.06)] flex items-center justify-center overflow-hidden min-h-[320px]">
-        <div id="placeholderState" class="text-center px-4">
-          <p class="text-slate-400 text-sm">Waiting for image upload</p>
+        class="rounded-[28px] bg-[#0f172a] shadow-[inset_0.7rem_0.7rem_1rem_0_rgba(0,0,0,0.6),inset_-0.55rem_-0.55rem_1rem_0_rgba(255,255,255,0.06)] overflow-hidden min-h-[320px] relative">
+        <div id="placeholderState"
+          class="absolute inset-0 flex flex-col items-center justify-center text-center px-4 z-10">
+          <p class="text-slate-400 text-sm">Waiting for image upload or take a picture</p>
+          <p class="text-slate-400 text-sm">Supported formats: JPG, PNG, WEBP, JFIF </p>
           <p id="fileName" class="mt-3 text-slate-400 text-xs">No image selected</p>
         </div>
 
+        <img id="previewImage" src="" alt="Preview"
+          class="hidden absolute inset-0 w-full h-full object-contain p-4 z-0" />
+        <video id="cameraPreview" autoplay playsinline
+          class="hidden absolute inset-0 w-full h-full object-contain p-4 z-0"></video>
       </div>
     </div>
 
-
-    <div class="mt-6 grid grid-cols-2 gap-6">
-      <button id="predictBtn" type="button"
-        class="rounded-3xl px-6 py-4 font-semibold text-slate-400 bg-[#1e293b] shadow-[0.65rem_0.65rem_1rem_0_rgba(0,0,0,0.6),-0.5rem_-0.5rem_1rem_0_rgba(255,255,255,0.08)] active:shadow-[inset_0.65rem_0.65rem_1rem_0_rgba(0,0,0,0.6),inset_-0.5rem_-0.5rem_1rem_0_rgba(255,255,255,0.08)]">
+    <div class="mt-6 flex w-full gap-6">
+      <button id="resetBtn" type="button"
+        class="flex-1 rounded-3xl px-6 py-4 font-semibold text-slate-400 bg-[#1e293b] shadow-[0.65rem_0.65rem_1rem_0_rgba(0,0,0,0.6),-0.5rem_-0.5rem_1rem_0_rgba(255,255,255,0.08)] active:shadow-[inset_0.65rem_0.65rem_1rem_0_rgba(0,0,0,0.6),inset_-0.5rem_-0.5rem_1rem_0_rgba(255,255,255,0.08)]">
         Reset
       </button>
 
-      <button id="resetBtn" type="button"
-        class="rounded-3xl px-6 py-4 font-semibold text-slate-400 bg-[#1e293b] shadow-[0.65rem_0.65rem_1rem_0_rgba(0,0,0,0.6),-0.5rem_-0.5rem_1rem_0_rgba(255,255,255,0.08)] active:shadow-[inset_0.65rem_0.65rem_1rem_0_rgba(0,0,0,0.6),inset_-0.5rem_-0.5rem_1rem_0_rgba(255,255,255,0.08)]">
+      <button id="captureBtn" type="button"
+        class="flex-1 rounded-3xl px-6 py-4 font-semibold text-slate-400 bg-[#1e293b] shadow-[0.65rem_0.65rem_1rem_0_rgba(0,0,0,0.6),-0.5rem_-0.5rem_1rem_0_rgba(255,255,255,0.08)]">
+        Capture
+      </button>
+
+      <button id="predictBtn" type="button"
+        class="flex-1 rounded-3xl px-6 py-4 font-semibold text-slate-400 bg-[#1e293b] shadow-[0.65rem_0.65rem_1rem_0_rgba(0,0,0,0.6),-0.5rem_-0.5rem_1rem_0_rgba(255,255,255,0.08)] active:shadow-[inset_0.65rem_0.65rem_1rem_0_rgba(0,0,0,0.6),inset_-0.5rem_-0.5rem_1rem_0_rgba(255,255,255,0.08)]">
         Predict
       </button>
+    </div>
+
+    <div id="resultPopup" class="hidden fixed inset-0 z-50 items-center justify-center bg-black/60 p-4">
+      <div class="w-full max-w-md rounded-3xl bg-[#1e293b] p-6 shadow-2xl border border-slate-700">
+        <div class="flex items-center justify-between">
+          <h2 class="text-xl font-semibold text-white">Prediction Result</h2>
+          <button id="closePopupBtn" type="button"
+            class="rounded-3xl px-3 py-1 font-semibold text-slate-400 bg-[#1e293b] shadow-[0.65rem_0.65rem_1rem_0_rgba(0,0,0,0.6),-0.5rem_-0.5rem_1rem_0_rgba(255,255,255,0.08)] active:shadow-[inset_0.65rem_0.65rem_1rem_0_rgba(0,0,0,0.6),inset_-0.5rem_-0.5rem_1rem_0_rgba(255,255,255,0.08)]">
+            x
+          </button>
+        </div>
+
+        <div class="mt-6 space-y-4">
+          <div class="rounded-2xl bg-[#0f172a] p-4">
+            <p class="text-sm text-slate-400">Fruit</p>
+            <p id="popupFruit" class="mt-1 text-lg font-semibold text-white">-</p>
+          </div>
+
+          <div class="rounded-2xl bg-[#0f172a] p-4">
+            <p class="text-sm text-slate-400">Rotten Percentage</p>
+            <p id="popupRotten" class="mt-1 text-lg font-semibold text-white">-</p>
+          </div>
+        </div>
+      </div>
     </div>
 
     <script src="/static/app.js"></script>

@@ -12,12 +12,20 @@ templates = Jinja2Templates(directory="src/app/templates")
 # Home page
 @router.get("/", response_class=HTMLResponse)
 def home(request: Request):
-    return templates.TemplateResponse("home.html", {"request": request})
+    return templates.TemplateResponse(
+    request=request,
+    name="home.html",
+    context={"request": request},
+)
 
 # App page
 @router.get("/app", response_class=HTMLResponse)
 def app_page(request: Request):
-    return templates.TemplateResponse("app.html", {"request": request})
+    return templates.TemplateResponse(
+    request=request,
+    name="app.html",
+    context={"request": request},
+)
 
 # API endpoint for image prediction
 @router.post("/predict")
