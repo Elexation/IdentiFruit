@@ -18,6 +18,15 @@ IMAGENET_STD  = [0.229, 0.224, 0.225]  # RGB standard deviations
 IMG_EXTS = {".jpg", ".jpeg", ".png", ".webp", ".jfif"}  # Supported image file extensions
 
 
+def get_val_transform(image_size=224):
+	"""Returns the validation/inference transform: resize, to tensor, and normalize."""
+	return transforms.Compose([
+		transforms.Resize((image_size, image_size)),
+		transforms.ToTensor(),
+		transforms.Normalize(mean=IMAGENET_MEAN, std=IMAGENET_STD),
+	])
+
+
 class FruitDataset(Dataset):
     """
     Loads images from the nested data/Train structure:
@@ -59,10 +68,7 @@ class FruitDataset(Dataset):
                 transforms.ColorJitter(brightness=0.3, contrast=0.3, saturation=0.2, hue=0.05),
             ] + to_tensor_and_norm)
         else:
-            # No augmentation
-            self.transform = transforms.Compose([
-                transforms.Resize((image_size, image_size)),
-            ] + to_tensor_and_norm)
+            self.transform = get_val_transform(image_size)
 
         self.samples: List[Tuple[Path, str]] = [] # list of (image_path, class_label_string) pairs
         class_name_set: set = set() # list of unique class label strings
