@@ -1,1 +1,8 @@
 @import "tailwindcss";
+
+@theme {
+	--shadow-neu: 0.65rem 0.65rem 1rem 0 rgba(0,0,0,0.6), -0.5rem -0.5rem 1rem 0 rgba(255,255,255,0.08);
+	--shadow-neu-lg: 0.875rem 0.875rem 1.4rem 0 rgba(0,0,0,0.6), -0.75rem -0.75rem 1.4rem 0 rgba(255,255,255,0.08);
+	--shadow-neu-inset: inset 0.7rem 0.7rem 1rem 0 rgba(0,0,0,0.6), inset -0.55rem -0.55rem 1rem 0 rgba(255,255,255,0.06);
+	--shadow-neu-pressed: inset 0.65rem 0.65rem 1rem 0 rgba(0,0,0,0.6), inset -0.5rem -0.5rem 1rem 0 rgba(255,255,255,0.08);
+}
