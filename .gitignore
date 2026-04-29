@@ -7,10 +7,6 @@ __pycache__/
 dist/
 build/
 
-# Claude
-CLAUDE.md
-.claude/
-
 # OS / editor
 .DS_Store
 Thumbs.db
@@ -20,15 +16,12 @@ Thumbs.db
 # Node / Tailwind
 node_modules/
 npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
 
 # Models
 models/*.pt
-models/*.pth
-models/*.onnx
-models/*.txt
+
+# Tailwind build output
+src/app/static/styles.css
 
 # data/
 data/
