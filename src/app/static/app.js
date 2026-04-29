@@ -2,17 +2,18 @@ const fileEl = document.getElementById("fileInput");
 const cameraEl = document.getElementById("cameraInput");
 const cameraBtn = document.getElementById("cameraBtn");
 const captureBtn = document.getElementById("captureBtn");
+const predictBtn = document.getElementById("predictBtn");
 
 const previewImage = document.getElementById("previewImage");
 const cameraPreview = document.getElementById("cameraPreview");
 const placeholderState = document.getElementById("placeholderState");
 const fileName = document.getElementById("fileName");
-const resetBtn = document.getElementById("resetBtn");
 
+const resetBtn = document.getElementById("resetBtn");
 const resultPopup = document.getElementById("resultPopup");
 const closePopupBtn = document.getElementById("closePopupBtn");
 const popupFruit = document.getElementById("popupFruit");
-const popupRotten = document.getElementById("popupRotten");
+const popupResult = document.getElementById("popupResult");
 
 let currentObjectUrl = null;
 let currentStream = null;
@@ -50,7 +51,7 @@ function showPreview(file) {
   };
 
   previewImage.onerror = () => {
-    console.log("image failed to load");
+    console.error("Image failed to load");
   };
 }
 
@@ -60,7 +61,7 @@ async function startCamera() {
 
     const stream = await navigator.mediaDevices.getUserMedia({
       video: true,
-      audio: false
+      audio: false,
     });
 
     currentStream = stream;
@@ -74,7 +75,7 @@ async function startCamera() {
 
     fileName.textContent = "Camera is on";
   } catch (err) {
-    console.log("Could not access camera:", err);
+    console.error("Could not access camera:", err);
     alert("Camera access was denied or unavailable.");
   }
 }
@@ -111,15 +112,18 @@ function resetUI() {
   }
 
   fileEl.value = "";
-  cameraEl.value = "";
+  if (cameraEl) {
+    cameraEl.value = "";
+  }
+
   previewImage.src = "";
   previewImage.classList.add("hidden");
-
   placeholderState.classList.remove("hidden");
-  fileName.textContent = "No image selected";
 
+  fileName.textContent = "No image selected";
   popupFruit.textContent = "-";
-  popupRotten.textContent = "-";
+  popupResult.textContent = "-";
+
   closePopup();
 }
 
@@ -133,6 +137,50 @@ function closePopup() {
   resultPopup.classList.remove("flex");
 }
 
+async function dataUrlToFile(dataUrl, filename = "capture.png") {
+  const response = await fetch(dataUrl);
+  const blob = await response.blob();
+  return new File([blob], filename, { type: blob.type || "image/png" });
+}
+
+async function getImageForPrediction() {
+  if (fileEl.files && fileEl.files[0]) {
+    return fileEl.files[0];
+  }
+
+  if (hasCapturedPhoto && previewImage.src) {
+    return await dataUrlToFile(previewImage.src);
+  }
+
+  return null;
+}
+
+function formatPrediction(data) {
+  if (!data || data.fruit === "Unknown") {
+    return {
+      fruitText: "Unknown",
+      detailText: "Not recognized with enough confidence",
+    };
+  }
+
+  const freshness =
+    data.freshness === "fresh"
+      ? "Fresh"
+      : data.freshness === "rotten"
+        ? "Rotten"
+        : "Unknown";
+
+  const confidence =
+    typeof data.confidence === "number"
+      ? `${Math.round(data.confidence * 100)}% confidence`
+      : "Confidence unavailable";
+
+  return {
+    fruitText: data.fruit,
+    detailText: `${freshness} • ${confidence}`,
+  };
+}
+
 fileEl.addEventListener("change", () => {
   const file = fileEl.files[0];
   showPreview(file);
@@ -140,7 +188,6 @@ fileEl.addEventListener("change", () => {
 
 cameraBtn.addEventListener("click", startCamera);
 captureBtn.addEventListener("click", capturePhoto);
-
 resetBtn.addEventListener("click", resetUI);
 closePopupBtn.addEventListener("click", closePopup);
 
@@ -150,22 +197,47 @@ resultPopup.addEventListener("click", (e) => {
   }
 });
 
-document.getElementById("predictBtn").onclick = () => {
-  const uploadedFile = fileEl.files[0];
-  const hasUploadedImage = !!uploadedFile;
-  const hasWebcamPhoto = hasCapturedPhoto;
+predictBtn.addEventListener("click", async () => {
+  const imageFile = await getImageForPrediction();
 
-  if (!hasUploadedImage && !hasWebcamPhoto) {
+  if (!imageFile) {
     alert("Please upload an image or take a picture first.");
     return;
   }
 
-  const fruits = ["Apple", "Banana", "Strawberry"];
-  const fruit = fruits[Math.floor(Math.random() * fruits.length)];
-  const rottenPercent = Math.floor(Math.random() * 100);
+  const originalLabel = predictBtn.textContent;
+  predictBtn.disabled = true;
+  predictBtn.textContent = "Predicting...";
 
-  popupFruit.textContent = fruit;
-  popupRotten.textContent = `${rottenPercent}%`;
+  try {
+    const form = new FormData();
+    form.append("file", imageFile);
 
-  openPopup();
-};
+    const response = await fetch("/predict", {
+      method: "POST",
+      body: form,
+    });
+
+    let data = null;
+    try {
+      data = await response.json();
+    } catch {
+      throw new Error("Server returned an invalid response.");
+    }
+
+    if (!response.ok) {
+      throw new Error(data.detail || "Prediction failed.");
+    }
+
+    const formatted = formatPrediction(data);
+    popupFruit.textContent = formatted.fruitText;
+    popupResult.textContent = formatted.detailText;
+    openPopup();
+  } catch (err) {
+    console.error("Prediction error:", err);
+    alert(err.message || "Something went wrong during prediction.");
+  } finally {
+    predictBtn.disabled = false;
+    predictBtn.textContent = originalLabel;
+  }
+});

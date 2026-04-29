@@ -1,8 +1,8 @@
 import io
-from fastapi import APIRouter, Request, UploadFile, File
+from fastapi import APIRouter, Request, UploadFile, File, HTTPException
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
-from PIL import Image
+from PIL import Image, UnidentifiedImageError
 from src.inference.predict import predict
 
 # Define router and templates
@@ -13,28 +13,37 @@ templates = Jinja2Templates(directory="src/app/templates")
 @router.get("/", response_class=HTMLResponse)
 def home(request: Request):
     return templates.TemplateResponse(
-    request=request,
-    name="home.html",
-    context={"request": request},
-)
+        request=request,
+        name="home.html",
+        context={"request": request},
+    )
 
 # App page
 @router.get("/app", response_class=HTMLResponse)
 def app_page(request: Request):
     return templates.TemplateResponse(
-    request=request,
-    name="app.html",
-    context={"request": request},
-)
+        request=request,
+        name="app.html",
+        context={"request": request},
+    )
 
 # API endpoint for image prediction
 @router.post("/predict")
 async def predict_route(file: UploadFile = File(...)):
-    # Read image file
     contents = await file.read()
 
-    # Convert bytes data to a PIL Image
-    img = Image.open(io.BytesIO(contents))
+    try:
+        img = Image.open(io.BytesIO(contents)).convert("RGB")
+        result = predict(img)
+        return result
 
-    result = predict(img) # Get prediction result
-    return JSONResponse(result) # Return result as JSON response
+    except UnidentifiedImageError:
+        raise HTTPException(status_code=400, detail="Invalid image file.")
+
+    except FileNotFoundError:
+        raise HTTPException(status_code=500, detail="Model not found.")
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+    return JSONResponse(result)
