@@ -58,6 +58,7 @@ function showPreview(file) {
 async function startCamera() {
   try {
     stopCameraStream();
+    fileEl.value = "";
 
     const stream = await navigator.mediaDevices.getUserMedia({
       video: true,
@@ -159,7 +160,7 @@ function formatPrediction(data) {
   if (!data || data.fruit === "Unknown") {
     return {
       fruitText: "Unknown",
-      detailText: "Not recognized with enough confidence",
+      detailText: "Not one of the supported fruits or model not confident",
     };
   }
 
@@ -218,15 +219,20 @@ predictBtn.addEventListener("click", async () => {
       body: form,
     });
 
+    if (!response.ok) {
+      let detail = `Request failed (${response.status})`;
+      try {
+        const errData = await response.json();
+        if (errData.detail) detail = errData.detail;
+      } catch {}
+      throw new Error(detail);
+    }
+
     let data = null;
     try {
       data = await response.json();
     } catch {
       throw new Error("Server returned an invalid response.");
-    }
-
-    if (!response.ok) {
-      throw new Error(data.detail || "Prediction failed.");
     }
 
     const formatted = formatPrediction(data);

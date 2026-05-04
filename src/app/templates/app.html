@@ -18,40 +18,40 @@
       <p class="mt-2 text-slate-400">Upload a fruit image and get a prediction.</p>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 flex-1">
-      <div class="grid grid-rows-2 gap-6">
-        <label for="fileInput"
-          class="h-full flex items-center justify-center rounded-[28px] bg-[#1e293b] text-slate-400 font-semibold text-lg shadow-[0.7rem_0.7rem_1rem_0_rgba(0,0,0,0.6),-0.55rem_-0.55rem_1rem_0_rgba(255,255,255,0.08)] active:shadow-[inset_0.7rem_0.7rem_1rem_0_rgba(0,0,0,0.6),inset_-0.55rem_-0.55rem_1rem_0_rgba(255,255,255,0.08)] transition-all duration-200 cursor-pointer">
-          Upload Image
-        </label>
+    <!-- Top buttons -->
+    <div class="mb-6 flex w-full gap-6">
+      <label for="fileInput"
+        class="flex-1 rounded-3xl px-6 py-4 text-center font-semibold text-slate-400 bg-[#1e293b] shadow-[0.65rem_0.65rem_1rem_0_rgba(0,0,0,0.6),-0.5rem_-0.5rem_1rem_0_rgba(255,255,255,0.08)] active:shadow-[inset_0.65rem_0.65rem_1rem_0_rgba(0,0,0,0.6),inset_-0.5rem_-0.5rem_1rem_0_rgba(255,255,255,0.08)] cursor-pointer">
+        Upload Image
+      </label>
 
-        <input id="fileInput" type="file" accept="image/*" class="hidden" />
+      <button id="cameraBtn" type="button"
+        class="flex-1 rounded-3xl px-6 py-4 font-semibold text-slate-400 bg-[#1e293b] shadow-[0.65rem_0.65rem_1rem_0_rgba(0,0,0,0.6),-0.5rem_-0.5rem_1rem_0_rgba(255,255,255,0.08)] active:shadow-[inset_0.65rem_0.65rem_1rem_0_rgba(0,0,0,0.6),inset_-0.5rem_-0.5rem_1rem_0_rgba(255,255,255,0.08)]">
+        Take Picture
+      </button>
 
-        <button id="cameraBtn" type="button"
-          class="h-full rounded-[28px] bg-[#1e293b] text-slate-400 font-semibold text-lg shadow-[0.7rem_0.7rem_1rem_0_rgba(0,0,0,0.6),-0.55rem_-0.55rem_1rem_0_rgba(255,255,255,0.08)] active:shadow-[inset_0.7rem_0.7rem_1rem_0_rgba(0,0,0,0.6),inset_-0.55rem_-0.55rem_1rem_0_rgba(255,255,255,0.08)] transition-all duration-200">
-          Take Picture
-        </button>
-
-        <input id="cameraInput" type="file" accept="image/*" capture="environment" class="hidden" />
-
-      </div>
-
-      <div
-        class="rounded-[28px] bg-[#0f172a] shadow-[inset_0.7rem_0.7rem_1rem_0_rgba(0,0,0,0.6),inset_-0.55rem_-0.55rem_1rem_0_rgba(255,255,255,0.06)] overflow-hidden min-h-[320px] relative">
-        <div id="placeholderState"
-          class="absolute inset-0 flex flex-col items-center justify-center text-center px-4 z-10">
-          <p class="text-slate-400 text-sm">Waiting for image upload or take a picture</p>
-          <p class="text-slate-400 text-sm">Supported formats: JPG, PNG, WEBP, JFIF </p>
-          <p id="fileName" class="mt-3 text-slate-400 text-xs">No image selected</p>
-        </div>
-
-        <img id="previewImage" src="" alt="Preview"
-          class="hidden absolute inset-0 w-full h-full object-contain p-4 z-0" />
-        <video id="cameraPreview" autoplay playsinline
-          class="hidden absolute inset-0 w-full h-full object-contain p-4 z-0"></video>
-      </div>
+      <input id="fileInput" type="file" accept="image/*" class="hidden" />
+      <input id="cameraInput" type="file" accept="image/*" capture="environment" class="hidden" />
     </div>
 
+    <!-- Center preview -->
+    <div
+      class="flex-1 rounded-[28px] bg-[#0f172a] shadow-[inset_0.7rem_0.7rem_1rem_0_rgba(0,0,0,0.6),inset_-0.55rem_-0.55rem_1rem_0_rgba(255,255,255,0.06)] overflow-hidden relative flex items-center justify-center">
+
+      <div id="placeholderState"
+        class="absolute inset-0 flex flex-col items-center justify-center text-center px-4 z-10">
+        <p class="text-slate-400 text-sm">Upload an image or take a picture</p>
+        <p class="text-slate-400 text-sm">of an apple, banana, orange, strawberry</p>
+        <p class="text-slate-400 text-sm">Supported formats: JPG, PNG, WEBP, JFIF</p>
+        <p id="fileName" class="mt-3 text-slate-400 text-xs">No image selected</p>
+      </div>
+
+      <img id="previewImage" src="" alt="Preview" class="hidden w-full h-full object-contain p-4" />
+
+      <video id="cameraPreview" autoplay playsinline class="hidden w-full h-full object-contain p-4"></video>
+    </div>
+
+    <!-- Bottom buttons -->
     <div class="mt-6 flex w-full gap-6">
       <button id="resetBtn" type="button"
         class="flex-1 rounded-3xl px-6 py-4 font-semibold text-slate-400 bg-[#1e293b] shadow-[0.65rem_0.65rem_1rem_0_rgba(0,0,0,0.6),-0.5rem_-0.5rem_1rem_0_rgba(255,255,255,0.08)] active:shadow-[inset_0.65rem_0.65rem_1rem_0_rgba(0,0,0,0.6),inset_-0.5rem_-0.5rem_1rem_0_rgba(255,255,255,0.08)]">
@@ -86,7 +86,7 @@
           </div>
 
           <div class="rounded-2xl bg-[#0f172a] p-4">
-            <p class="text-sm text-slate-400">Percentage</p>
+            <p class="text-sm text-slate-400">Result</p>
             <p id="popupResult" class="mt-1 text-lg font-semibold text-white">-</p>
           </div>
         </div>
