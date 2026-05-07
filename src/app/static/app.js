@@ -173,7 +173,7 @@ function formatPrediction(data) {
 
   const confidence =
     typeof data.confidence === "number"
-      ? `${Math.round(data.confidence * 100)}% confidence`
+      ? `${(data.confidence * 100).toFixed(1)}% confidence`
       : "Confidence unavailable";
 
   return {

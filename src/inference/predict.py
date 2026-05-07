@@ -10,7 +10,8 @@ from src.training.dataset import get_val_transform
 
 MODEL_PATH = "models/fruit_model.pt"
 IMAGE_SIZE = 224
-CONFIDENCE_THRESHOLD = 0.8
+CONFIDENCE_THRESHOLD = 0.5
+TEMPERATURE = 4.0
 
 # Lazy-loaded on first predict() call
 _model = None
@@ -47,7 +48,7 @@ def predict(img: Image.Image) -> dict:
 	with torch.no_grad():
 		logits = _model(tensor)
 
-	probs = torch.softmax(logits, dim=1)[0]
+	probs = torch.softmax(logits / TEMPERATURE, dim=1)[0]
 	pred_idx = probs.argmax().item()
 	confidence = probs[pred_idx].item()
 	pred_class = _class_names[pred_idx]
