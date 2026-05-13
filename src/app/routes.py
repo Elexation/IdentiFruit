@@ -1,9 +1,14 @@
 import io
+import logging
 from fastapi import APIRouter, Request, UploadFile, File, HTTPException
-from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from PIL import Image, UnidentifiedImageError
 from src.inference.predict import predict
+
+logger = logging.getLogger(__name__)
+
+MAX_UPLOAD_BYTES = 10 * 1024 * 1024
 
 # Define router and templates
 router = APIRouter()
@@ -29,8 +34,11 @@ def app_page(request: Request):
 
 # API endpoint for image prediction
 @router.post("/predict")
-async def predict_route(file: UploadFile = File(...)):
-    contents = await file.read()
+def predict_route(file: UploadFile = File(...)):
+    contents = file.read()
+
+    if len(contents) > MAX_UPLOAD_BYTES:
+        raise HTTPException(status_code=413, detail="File too large. Maximum size is 10 MB.")
 
     try:
         img = Image.open(io.BytesIO(contents)).convert("RGB")
@@ -43,7 +51,6 @@ async def predict_route(file: UploadFile = File(...)):
     except FileNotFoundError:
         raise HTTPException(status_code=500, detail="Model not found.")
 
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-    return JSONResponse(result)
+    except Exception:
+        logger.exception("Prediction failed")
+        raise HTTPException(status_code=500, detail="An internal error occurred.")
