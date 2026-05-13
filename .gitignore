@@ -25,3 +25,7 @@ src/app/static/styles.css
 
 # data/
 data/
+
+# Project assets & scripts
+assets/
+scripts/
