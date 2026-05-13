@@ -35,7 +35,7 @@ def app_page(request: Request):
 # API endpoint for image prediction
 @router.post("/predict")
 def predict_route(file: UploadFile = File(...)):
-    contents = file.read()
+    contents = file.file.read()
 
     if len(contents) > MAX_UPLOAD_BYTES:
         raise HTTPException(status_code=413, detail="File too large. Maximum size is 10 MB.")
